@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["djangodatabase-production.up.railway.app"]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://172.20.10.2:3000",  # Your frontend URL
+]
 
 # Application definition
 
