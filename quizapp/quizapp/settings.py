@@ -28,8 +28,22 @@ DEBUG = True
 ALLOWED_HOSTS = ["djangodatabase-production.up.railway.app"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://172.20.10.2:3000",  # Your frontend URL
+    "http://172.20.10.2:3000",
+    "http://localhost:3000",
 ]
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+]
+
 
 # Application definition
 
@@ -46,6 +60,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
