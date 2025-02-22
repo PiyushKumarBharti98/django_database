@@ -11,3 +11,5 @@ pytz==2024.2
 setuptools==75.1.0
 sqlparse==0.5.1
 asgiref
+gunicorn==23.0.0
+packaging==24.2
