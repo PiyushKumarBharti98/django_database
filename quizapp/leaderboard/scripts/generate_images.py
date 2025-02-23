@@ -5,7 +5,7 @@ from django.core.files import File
 from PIL import Image
 import cloudinary 
 import cloudinary.uploader
-
+import random
 from .prompts import harry_potter_prompts , lord_of_the_rings_prompts , marvel_prompts
 from huggingface_hub import InferenceClient
 from leaderboard.models import UserProgress, GeneratedImage
@@ -31,8 +31,8 @@ def generate_image(wallet_address, genre):
         )
         logger.debug(f"User progress: {user_progress}")
 
-        # Get the current prompt index
-        prompt_index = user_progress.prompt_index
+        # Get the random prompt index
+        prompt_index = random.randint(0,7)
         logger.debug(f"Prompt index: {prompt_index}")
 
         # Select the appropriate prompt list
@@ -44,11 +44,6 @@ def generate_image(wallet_address, genre):
             prompts = lord_of_the_rings_prompts
         else:
             raise ValueError("Invalid genre")
-
-        # Check if the user has completed all prompts
-        if prompt_index >= len(prompts):
-            logger.debug("No more prompts available for this genre.")
-            return None
 
         # Get the current prompt
         prompt = prompts[prompt_index]
