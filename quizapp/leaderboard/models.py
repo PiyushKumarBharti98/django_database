@@ -25,3 +25,10 @@ class UserProgress(models.Model):
 
     def __str__(self):
         return f"{self.wallet_address} - {self.genre} - Prompt {self.prompt_index}"
+
+class WalletMetadata(models.Model):
+    wallet_address = models.CharField(max_length=42, unique=True)  # Ethereum wallet address
+    metadata = models.JSONField()  # Store metadata as JSON
+
+    def __str__(self):
+        return f"{self.wallet_address} - {self.metadata}"
