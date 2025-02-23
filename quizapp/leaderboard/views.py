@@ -8,6 +8,20 @@ from rest_framework.response import Response
 from .models import UserProgress, GeneratedImage
 from .scripts.generate_images import generate_image
 from .models import GeneratedImage
+from rest_framework.response import Response
+from .models import WalletMetadata
+
+class RetrieveWalletMetadataView(APIView):
+    def get(self, request, wallet_address):
+        try:
+            wallet_metadata = WalletMetadata.objects.get(wallet_address=wallet_address)
+            # Return only the metadata (e.g., image and description)
+            return Response(wallet_metadata.metadata, status=status.HTTP_200_OK)
+        except WalletMetadata.DoesNotExist:
+            return Response(
+                {"error": "Wallet address not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 from .serializers import GeneratedImageSerializer
 
 
@@ -120,12 +134,13 @@ class StoreWalletMetadataView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class RetrieveWalletMetadataView(APIView):
     def get(self, request, wallet_address):
         try:
             wallet_metadata = WalletMetadata.objects.get(wallet_address=wallet_address)
-            serializer = WalletMetadataSerializer(wallet_metadata)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            # Return only the metadata (e.g., image and description)
+            return Response(wallet_metadata.metadata, status=status.HTTP_200_OK)
         except WalletMetadata.DoesNotExist:
             return Response(
                 {"error": "Wallet address not found."},
