@@ -11,4 +11,6 @@ urlpatterns = [
     path('generated-images/', views.GeneratedImageView.as_view(), name='generated-images'),
     path('attempt-quiz/', views.AttemptQuizView.as_view(), name='attempt-quiz'),
     path('total-score/<str:wallet_address>/<str:genre>/', views.UserTotalScoreView.as_view(), name='user-total-score'),
+    path('store-wallet-metadata/', StoreWalletMetadataView.as_view(), name='store-wallet-metadata'),
+    path('retrieve-wallet-metadata/<str:wallet_address>/', RetrieveWalletMetadataView.as_view(), name='retrieve-wallet-metadata'),
 ]
