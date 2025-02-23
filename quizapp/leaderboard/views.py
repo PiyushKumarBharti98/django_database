@@ -5,6 +5,11 @@ from .serializers import LeaderboardSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .models import UserProgress, GeneratedImage
+from .scripts.generate_images import generate_image
+from .models import GeneratedImage
+from .serializers import GeneratedImageSerializer
+
 
 class LeaderboardListCreateView(generics.ListCreateAPIView):
     queryset = Leaderboard.objects.all()
@@ -67,3 +72,40 @@ class UserTotalScoreView(APIView):
             {"wallet_address": wallet_address, "genre": genre, "total_score": total_score},
             status=status.HTTP_200_OK
         )
+
+class GeneratedImageView(APIView):
+    def get(self, request):
+        images = GeneratedImage.objects.all()
+        serializer = GeneratedImageSerializer(images, many=True)
+        return Response(serializer.data)
+
+class AttemptQuizView(APIView):
+    def post(self, request):
+        wallet_address = request.data.get('wallet_address')
+        genre = request.data.get('genre')
+
+        if not wallet_address or not genre:
+            return Response(
+                {"error": "wallet_address and genre are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Generate the image
+        generated_image = generate_image(wallet_address, genre)
+
+        if not generated_image:
+            return Response(
+                {"error": "No more prompts available for this genre."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        return Response(
+            {
+                "message": "Quiz attempted successfully.",
+                "image_url": generated_image.image_url,  # Return the Cloudinary URL
+                "prompt": generated_image.prompt,
+                "genre": generated_image.genre
+            },
+            status=status.HTTP_201_CREATED
+        )
+
