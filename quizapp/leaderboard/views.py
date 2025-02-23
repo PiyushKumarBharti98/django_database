@@ -109,3 +109,25 @@ class AttemptQuizView(APIView):
             status=status.HTTP_201_CREATED
         )
 
+from .models import WalletMetadata
+from .serializers import WalletMetadataSerializer
+
+class StoreWalletMetadataView(APIView):
+    def post(self, request):
+        serializer = WalletMetadataSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RetrieveWalletMetadataView(APIView):
+    def get(self, request, wallet_address):
+        try:
+            wallet_metadata = WalletMetadata.objects.get(wallet_address=wallet_address)
+            serializer = WalletMetadataSerializer(wallet_metadata)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except WalletMetadata.DoesNotExist:
+            return Response(
+                {"error": "Wallet address not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
