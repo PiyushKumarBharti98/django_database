@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 client = InferenceClient(
     provider="hf-inference",
-    api_key="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"
+    api_key="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"
 )
 
 def generate_image(wallet_address, genre):
