@@ -138,6 +138,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+# Cloudinary configuration
+cloudinary.config( 
+    cloud_name = "dl7n2c4hr", 
+    api_key = "934939333163652", 
+    api_secret = "6wzMkN8DTt1bsrYCNZxj7NgGbgI", # Click 'View API Keys' above to copy your API secret
+    secure=True
+)
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
