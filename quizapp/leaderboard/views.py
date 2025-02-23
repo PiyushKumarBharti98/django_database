@@ -104,7 +104,7 @@ class AttemptQuizView(APIView):
                 "message": "Quiz attempted successfully.",
                 "image_url": generated_image.image_url,  # Return the Cloudinary URL
                 "prompt": generated_image.prompt,
-                "genre": generated_image.genre
+                "genre": genre
             },
             status=status.HTTP_201_CREATED
         )
