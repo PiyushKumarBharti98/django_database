@@ -1,4 +1,3 @@
-# leaderboard/serializers.py
 from rest_framework import serializers
 from .models import Leaderboard
 from .models import GeneratedImage
