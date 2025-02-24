@@ -1,4 +1,3 @@
-# leaderboard/scripts/generate_image.py
 import os
 import io
 from django.core.files import File
@@ -10,16 +9,16 @@ from .prompts import harry_potter_prompts , lord_of_the_rings_prompts , marvel_p
 from huggingface_hub import InferenceClient
 from leaderboard.models import UserProgress, GeneratedImage
 
-# leaderboard/scripts/generate_image.py
+HF_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+
 import logging
 
-# Set up logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 client = InferenceClient(
     provider="hf-inference",
-    api_key="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"
+    api_key=HF_TOKEN
 )
 
 def generate_image(wallet_address, genre):
@@ -55,7 +54,6 @@ def generate_image(wallet_address, genre):
             model="black-forest-labs/FLUX.1-dev"
         )
         logger.debug(f"Image data type: {type(image)}")
-        #logger.debug(f"Image data length: {len(image)}")
 
         # Convert the image to a PIL Image object
         pil_image = image
@@ -64,27 +62,25 @@ def generate_image(wallet_address, genre):
 
         # Convert the PIL Image to bytes
         img_byte_array = io.BytesIO()
-        pil_image.save(img_byte_array, format='PNG')  # Save as PNG
+        pil_image.save(img_byte_array, format='PNG') 
         img_byte_array.seek(0)
         logger.debug(f"Image bytes length: {len(img_byte_array.getvalue())}")
 
         # Upload the image to Cloudinary
         upload_result = cloudinary.uploader.upload(
-            img_byte_array,  # Pass the bytes-like object
-            folder="quizapp",  # Optional: Organize images in a folder
-            public_id=f"{genre}_{wallet_address}_{prompt_index}"  # Unique ID for the image
+            img_byte_array,  
+            folder="quizapp",  
+            public_id=f"{genre}_{wallet_address}_{prompt_index}"  
         )
         logger.debug(f"Image uploaded to Cloudinary: {upload_result}")
 
-        # Save the image URL to the database
         generated_image = GeneratedImage(
             prompt=prompt,
-            image_url=upload_result['secure_url']  # Save the Cloudinary URL
+            image_url=upload_result['secure_url'] 
         )
         generated_image.save()
         logger.debug(f"Generated image saved to database: {generated_image}")
 
-        # Update the user's progress
         user_progress.prompt_index += 1
         user_progress.save()
         logger.debug(f"User progress updated: {user_progress}")
